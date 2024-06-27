@@ -17,4 +17,9 @@ File Organizer is a simple Python/Tkinter application to organize files into cat
 2. Click "Choose Directory" to select the directory containing files to organize.
 3. Click "Organize Files" to start organizing files into categorized folders.
 
+## Video
+
+
+https://github.com/AshrafGamalG3/File-Organizer/assets/159867026/ad3396dc-49aa-4d73-9647-4d13eecf5574
+
 
