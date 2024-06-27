@@ -1,0 +1,78 @@
+import os
+import shutil
+import tkinter as tk
+from tkinter import filedialog, messagebox
+
+def organize_files(source_path):
+   
+    folder_mapping = {
+        '.pdf': 'PDFs',
+        '.mp4': 'Videos',
+        '.avi': 'Videos',
+        '.mov': 'Videos',
+        '.mkv': 'Videos',
+        '.txt': 'Text',
+        '.rar': 'RAR',
+        '.m4a': 'Audio',
+        '.docx': 'Documents',
+        '.zip': 'ZIP'
+    }
+
+    for folder_name in set(folder_mapping.values()):
+        folder_path = os.path.join(source_path, folder_name)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+
+
+    for root, dirs, files in os.walk(source_path):
+        for file in files:
+            file_path = os.path.join(root, file)
+            file_ext = os.path.splitext(file)[1]
+         
+            if file_ext.lower() in folder_mapping:
+                dest_folder = os.path.join(source_path, folder_mapping[file_ext.lower()])
+                dest_file_path = os.path.join(dest_folder, file)
+         
+                if os.path.exists(dest_file_path):
+        
+                    base, ext = os.path.splitext(file)
+                    new_file = f"{base}_1{ext}"
+                    dest_file_path = os.path.join(dest_folder, new_file)
+                shutil.move(file_path, dest_file_path)
+                print(f"Moved {file} to {folder_mapping[file_ext.lower()]} folder.")
+
+
+def choose_directory():
+    directory_path = filedialog.askdirectory()
+    if directory_path:
+        path_var.set(directory_path)
+
+def organize_files_and_display_path():
+    directory_path = path_var.get()
+    if directory_path:
+        organize_files(directory_path)
+        messagebox.showinfo("Success", "Files organized successfully.")
+    else:
+        messagebox.showerror("Error", "Please select a directory.")
+
+
+root = tk.Tk()
+root.title("File Organizer")
+root.geometry("400x250")
+root.configure(bg="#f0f0f0")
+
+path_var = tk.StringVar()
+
+title_label = tk.Label(root, text="File Organizer", font=("Arial", 20, "bold"), bg="#f0f0f0")
+title_label.pack(pady=10)
+
+choose_button = tk.Button(root, text="Choose Directory", command=choose_directory, padx=10, pady=5, bg="#4CAF50", fg="white", font=("Arial", 12))
+choose_button.pack(pady=10)
+
+path_label = tk.Label(root, textvariable=path_var, bg="#f0f0f0", wraplength=350)
+path_label.pack(pady=10)
+
+organize_button = tk.Button(root, text="Organize Files", command=organize_files_and_display_path, padx=10, pady=5, bg="#4CAF50", fg="white", font=("Arial", 12))
+organize_button.pack(pady=10)
+
+root.mainloop()
